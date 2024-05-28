@@ -31,8 +31,9 @@ def convert_books():
 
             for book in unique_books:
                 for format in desired_formats:
-                    if os.path.exists(f"{book}{format}"):
-                        input_file = os.path.join(root, f"{book}{format}")
+                    book_path = os.path.join(root, f"{book}{format}")
+                    if os.path.exists(book_path):
+                        input_file = os.path.join(book_path)
                         break
 
                 for file_format in desired_formats:
