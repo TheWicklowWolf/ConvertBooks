@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 from time import sleep
 from datetime import datetime
@@ -16,6 +17,14 @@ def convert_book(input_file, output_file):
         logging.error(f"Error converting {input_file}: {str(e)}")
 
 
+def copy_book(input_file, output_file):
+    try:
+        shutil.copy(input_file, output_file)
+        logging.info(f"Copied {input_file} to {output_file}")
+    except Exception as e:
+        logging.error(f"Error copying {input_file}: {str(e)}")
+
+
 def run_conversion():
     with concurrent.futures.ThreadPoolExecutor(max_workers=thread_limit) as executor:
         futures = []
@@ -28,20 +37,26 @@ def run_conversion():
             unique_books = set([os.path.splitext(book)[0] for book in book_files])
 
             for book in unique_books:
-                for format in book_source_formats:
-                    book_path = os.path.join(root, f"{book}{format}")
+                for source_format in book_source_formats:
+                    book_path = os.path.join(root, f"{book}{source_format}")
                     if os.path.exists(book_path):
-                        input_file = os.path.join(book_path)
+                        input_file = book_path
                         break
+                else:
+                    logging.warning(f"No valid input file found for {book}")
+                    continue
 
-                for file_format in desired_output_formats:
+                for output_format in desired_output_formats:
                     relative_root = os.path.relpath(root, source_folder)
                     output_file_dir = os.path.join(destination_folder, relative_root)
                     if not os.path.exists(output_file_dir):
                         os.makedirs(output_file_dir, exist_ok=True)
-                    output_file = os.path.join(output_file_dir, f"{book}{file_format}")
+                    output_file = os.path.join(output_file_dir, f"{book}{output_format}")
                     if not os.path.exists(output_file):
-                        futures.append(executor.submit(convert_book, input_file, output_file))
+                        if source_format == output_format:
+                            futures.append(executor.submit(copy_book, input_file, output_file))
+                        else:
+                            futures.append(executor.submit(convert_book, input_file, output_file))
 
         concurrent.futures.wait(futures)
 

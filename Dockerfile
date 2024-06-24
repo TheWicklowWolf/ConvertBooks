@@ -7,7 +7,7 @@ RUN groupadd -g $GID general_user && \
     useradd -m -u $UID -g $GID general_user
 
 # Install dependencies
-RUN apt-get update && apt-get install -y sudo wget libegl1 libopengl0 libxcb-cursor0 xz-utils fontconfig libxkbcommon0 libglx0
+RUN apt-get update && apt-get install -y sudo wget libegl1 libopengl0 libxcb-cursor0 xz-utils fontconfig libxkbcommon0 libglx0 libnss3
 
 # Install Calibre
 RUN wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin
