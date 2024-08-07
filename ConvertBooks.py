@@ -64,6 +64,13 @@ def run_conversion():
 
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
+
+app_name_text = os.path.basename(__file__).replace(".py", "")
+release_version = os.environ.get("RELEASE_VERSION", "unknown")
+logging.info(f"{'*' * 50}\n")
+logging.info(f"{app_name_text} Version: {release_version}\n")
+logging.info(f"{'*' * 50}")
+
 book_source_formats = os.getenv("book_source_formats", ".epub,.mobi,.azw3").split(",")
 desired_output_formats = os.getenv("desired_output_formats", ".mobi,.azw3").split(",")
 schedule = os.getenv("schedule", "0").split(",")

@@ -1,5 +1,9 @@
 FROM python:3.12-slim
 
+# Set build arguments
+ARG RELEASE_VERSION
+ENV RELEASE_VERSION=${RELEASE_VERSION}
+
 # Create User
 ARG UID=1000
 ARG GID=1000
