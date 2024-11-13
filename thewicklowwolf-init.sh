@@ -44,4 +44,4 @@ chown -R ${PUID}:${PGID} /convertbooks
 
 # Start the application with the specified user permissions
 echo "Running ConvertBooks..."
-exec gosu ${PUID}:${PGID} gunicorn src.ConvertBooks:app -c gunicorn_config.py
+exec gosu ${PUID}:${PGID} python ConvertBooks.py
