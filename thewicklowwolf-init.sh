@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo -e "\033[1;32mTheWicklowWolf\033[0m"
-echo -e "\033[1;34mLidify\033[0m"
+echo -e "\033[1;34mConvertBooks\033[0m"
 echo "Initializing app..."
 
 cat << 'EOF'
@@ -39,9 +39,9 @@ echo "-----------------"
 
 # Create the required directories with the correct permissions
 echo "Setting up directories.."
-mkdir -p /lidify/config
-chown -R ${PUID}:${PGID} /lidify
+mkdir -p /convertbooks/source /convertbooks/destination
+chown -R ${PUID}:${PGID} /convertbooks
 
 # Start the application with the specified user permissions
-echo "Running Lidify..."
-exec su-exec ${PUID}:${PGID} gunicorn src.Lidify:app -c gunicorn_config.py
+echo "Running ConvertBooks..."
+exec gosu ${PUID}:${PGID} gunicorn src.ConvertBooks:app -c gunicorn_config.py
