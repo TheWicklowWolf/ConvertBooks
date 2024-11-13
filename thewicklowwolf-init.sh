@@ -40,7 +40,7 @@ echo "-----------------"
 # Create the required directories with the correct permissions
 echo "Setting up directories.."
 mkdir -p /convertbooks/source /convertbooks/destination
-chown -R ${PUID}:${PGID} /convertbooks
+chown -R ${PUID}:${PGID} /convertbooks/destination
 
 # Start the application with the specified user permissions
 echo "Running ConvertBooks..."
