@@ -1,30 +1,24 @@
-FROM python:3.12-slim
+FROM python:3.12-alpine
 
 # Set build arguments
 ARG RELEASE_VERSION
 ENV RELEASE_VERSION=${RELEASE_VERSION}
 
-# Create User
-ARG UID=1000
-ARG GID=1000
-RUN groupadd -g $GID general_user && \
-    useradd -m -u $UID -g $GID general_user
-
-# Install dependencies
-RUN apt-get update && apt-get install -y sudo wget libegl1 libopengl0 libxcb-cursor0 xz-utils fontconfig libxkbcommon0 libglx0 libnss3
-
-# Install Calibre
-RUN wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin
-ENV LD_LIBRARY_PATH="/opt/calibre/lib:${LD_LIBRARY_PATH}"
-ENV PATH="/opt/calibre/bin:${PATH}"
+# Install su-exec
+RUN apk update && apk add --no-cache su-exec
 
 # Create directories and set permissions
-COPY . /convertbooks
-WORKDIR /convertbooks
-RUN chown -R general_user:general_user /convertbooks
+COPY . /lidify
+WORKDIR /lidify
 
-# Switch user
-USER general_user
+# Install requirements
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Specify the default command
-CMD ["python", "ConvertBooks.py"]
+# Make the script executable
+RUN chmod +x thewicklowwolf-init.sh
+
+# Expose port
+EXPOSE 5000
+
+# Start the app
+ENTRYPOINT ["./thewicklowwolf-init.sh"]
